@@ -1,14 +1,12 @@
 import streamlit as st
 
-# Set page config first (before any other Streamlit commands)
-st.set_page_config(page_title="Resume Analyser")
-
-# Hide Streamlit branding using custom CSS
+# Hide Streamlit branding and GitHub link using custom CSS
 hide_streamlit_style = """
             <style>
             #MainMenu {visibility: hidden;}
             footer {visibility: hidden;}
             header {visibility: hidden;}
+            .css-1v3fvcr {visibility: hidden;}  /* Hides the GitHub link */
             </style>
             """
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
@@ -16,7 +14,6 @@ st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 from dotenv import load_dotenv
 load_dotenv()
 import base64
-import streamlit as st
 import os
 import io
 import fitz  # PyMuPDF
@@ -58,6 +55,7 @@ def input_pdf_setup(uploaded_file):
         raise FileNotFoundError("No file uploaded")
 
 # Streamlit app setup
+st.set_page_config(page_title="Resume Analyser")
 st.header("Resume Scanner")
 
 input_text = st.text_area("Job Description: ", key="input")
