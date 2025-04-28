@@ -6,10 +6,11 @@ st.set_page_config(page_title="Resume Analyser")
 # Hide Streamlit branding and GitHub link using custom CSS
 hide_streamlit_style = """
             <style>
-            #MainMenu {visibility: hidden;}
-            footer {visibility: hidden;}
-            header {visibility: hidden;}
+            #MainMenu {visibility: hidden;}  /* Hides the hamburger menu */
+            footer {visibility: hidden;}  /* Hides the footer */
+            header {visibility: hidden;}  /* Hides the header */
             .css-1v3fvcr {visibility: hidden;}  /* Hides the GitHub link */
+            .css-1rbgqoz {visibility: hidden;}  /* Hides Streamlit logo and footer */
             </style>
             """
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
