@@ -1,5 +1,8 @@
 import streamlit as st
 
+# Set page config first (before any other Streamlit commands)
+st.set_page_config(page_title="Resume Analyser")
+
 # Hide Streamlit branding using custom CSS
 hide_streamlit_style = """
             <style>
@@ -9,7 +12,6 @@ hide_streamlit_style = """
             </style>
             """
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
-
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -56,7 +58,6 @@ def input_pdf_setup(uploaded_file):
         raise FileNotFoundError("No file uploaded")
 
 # Streamlit app setup
-st.set_page_config(page_title="Resume Analyser")
 st.header("Resume Scanner")
 
 input_text = st.text_area("Job Description: ", key="input")
