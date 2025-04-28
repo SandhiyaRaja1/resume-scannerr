@@ -1,5 +1,4 @@
 from dotenv import load_dotenv
-
 load_dotenv()
 import base64
 import streamlit as st
@@ -10,50 +9,53 @@ import google.generativeai as genai
 
 genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
 
-#give the inputs to gemini and the response
+# Define the function to send inputs to Gemini and get a response
 def get_gemini_response(input, pdf_content, prompt):
     model = genai.GenerativeModel('gemini-1.5-flash')
     response = model.generate_content([input, pdf_content[0], prompt])
     return response.text
 
+# Define the function for processing the uploaded PDF file
 def input_pdf_setup(uploaded_file):
     if uploaded_file is not None:
         # Convert the PDF to image using PyMuPDF
         pdf_file = fitz.open(stream=uploaded_file.read(), filetype="pdf")
         first_page = pdf_file.load_page(0)  # Get the first page of the PDF
 
-        # Convert page to image (pixmap)
+        # Convert the page to a pixmap (image)
         pix = first_page.get_pixmap()
-        
-        # Convert the pixmap to byte array in JPEG format
-        img_byte_arr = io.BytesIO()
-        pix.save(img_byte_arr, format='JPEG')
-        img_byte_arr = img_byte_arr.getvalue()
 
+        # Convert the pixmap to byte array in PNG format
+        img_byte_arr = io.BytesIO()
+        img_bytes = pix.tobytes("png")  # Save the image to bytes in PNG format
+        img_byte_arr.write(img_bytes)
+        img_byte_arr.seek(0)  # Rewind to the start of the byte array
+
+        # Encode the image into base64 for web use
         pdf_parts = [
             {
-                "mime_type": "image/jpeg",
-                "data": base64.b64encode(img_byte_arr).decode()  # encode to base64
+                "mime_type": "image/png",  # MIME type for PNG
+                "data": base64.b64encode(img_byte_arr.getvalue()).decode()  # Encode image to base64
             }
         ]
         return pdf_parts
     else:
         raise FileNotFoundError("No file uploaded")
 
-## Streamlit App
-
+# Streamlit app setup
 st.set_page_config(page_title="Resume Analyser")
 st.header("Resume Scanner")
+
 input_text = st.text_area("Job Description: ", key="input")
-uploaded_file = st.file_uploader("Upload your resume(PDF)...", type=["pdf"])
+uploaded_file = st.file_uploader("Upload your resume (PDF)...", type=["pdf"])
 
 if uploaded_file is not None:
     st.write("PDF Uploaded Successfully")
 
 submit1 = st.button("Tell Me About the Resume")
-
 submit3 = st.button("Percentage match")
 
+# Prompts for Gemini model
 input_prompt1 = """
 You are an experienced Technical Human Resource Manager. Your task is to review the provided resume against the job description. 
 Please share your professional evaluation on whether the candidate's profile aligns with the role. 
@@ -66,6 +68,7 @@ Your task is to evaluate the resume against the provided job description. Give m
 the job description. First, the output should come as percentage and then keywords missing and last final thoughts.
 """
 
+# If the user clicks "Tell Me About the Resume"
 if submit1:
     if not input_text.strip():
         st.write("Please enter the job description")
@@ -77,6 +80,7 @@ if submit1:
         st.subheader("The Response is")
         st.write(response)
 
+# If the user clicks "Percentage Match"
 elif submit3:
     if not input_text.strip():
         st.write("Please enter the job description")
