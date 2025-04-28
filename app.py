@@ -1,3 +1,16 @@
+import streamlit as st
+
+# Hide Streamlit branding using custom CSS
+hide_streamlit_style = """
+            <style>
+            #MainMenu {visibility: hidden;}
+            footer {visibility: hidden;}
+            header {visibility: hidden;}
+            </style>
+            """
+st.markdown(hide_streamlit_style, unsafe_allow_html=True)
+
+
 from dotenv import load_dotenv
 load_dotenv()
 import base64
