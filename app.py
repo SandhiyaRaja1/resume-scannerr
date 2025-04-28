@@ -1,5 +1,8 @@
 import streamlit as st
 
+# Set the page config first
+st.set_page_config(page_title="Resume Analyser")
+
 # Hide Streamlit branding and GitHub link using custom CSS
 hide_streamlit_style = """
             <style>
@@ -55,7 +58,6 @@ def input_pdf_setup(uploaded_file):
         raise FileNotFoundError("No file uploaded")
 
 # Streamlit app setup
-st.set_page_config(page_title="Resume Analyser")
 st.header("Resume Scanner")
 
 input_text = st.text_area("Job Description: ", key="input")
